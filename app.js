@@ -11,7 +11,8 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(express.static('public'))
 
-PORT        = 9148;                 // Set a port number at the top so it's easy to change in the future
+// PORT        = 9148;                 // Set a port number at the top so it's easy to change in the future
+PORT        = 9158;
 // Database
 var db = require('./database/db-connector')
 
@@ -29,7 +30,7 @@ app.get('/', function(req, res)
     res.render('index');                    // Note the call to render() and not send(). Using render() ensures the templating engine
 });                                         // will process this file, before sending the finished HTML to the client.
 
-//Customer CRUD
+// Customer CRUD
 
 app.get('/customers', function(req, res)
     {  
@@ -187,17 +188,105 @@ app.delete('/delete-employee-ajax/', function(req,res,next){
         }
     );
 });
+
+// Product CRUD 
+app.get('/products', function(req, res)
+    {  
+        let query1 = "SELECT * FROM Products;";               // Define our query
+
+        db.pool.query(query1, function(error, rows, fields){    // Execute the query
+
+            res.render('products', {data: rows});                  // Render the index.hbs file, and also send the renderer
+        })                                                      // an object where 'data' is equal to the 'rows' we
+    });
+app.post('/add-product-ajax', function(req, res) 
+{
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body;
+
+    // Capture NULL values
+    let price = parseFloat(data.price);
+    if (isNaN(price))
+    {
+        [price] = 'NULL'
+    }
+
+    // Create the query and run it on the database
+    query1 = `INSERT INTO Products (name, price) VALUES ('${data.name}', ${price})`;
+    db.pool.query(query1, function(error, rows, fields){
+
+        // Check to see if there was an error
+        if (error) {
+
+            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+            console.log(error)
+            res.sendStatus(400);
+        }
+        else
+        {
+            res.redirect('/products');
+        }
+    })
+});
+app.delete('/delete-product-ajax/', function(req,res,next){
+    let data = req.body;
+    let idProduct = parseInt(data.id);
+    let deleteProduct = `DELETE FROM Products WHERE idProduct = ?;`;  
+  
+          // Run the 1st query
+          db.pool.query(deleteProduct, [idProduct], function(error, rows, fields){
+              if (error) {
+  
+              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+              console.log(error);
+              res.sendStatus(400);
+              }
+              else
+            {
+                res.redirect('/products');
+            }
+  })});
+  app.put('/put-product-ajax', function(req, res, next) {
+    let data = req.body;
+    let idProduct = parseInt(data.pname);
+    let price = parseFloat(data.price);  
+    let query1 = `UPDATE Products SET name = ?, price = ? WHERE idProduct = ?;`;
+    db.pool.query(query1, [data['name'], price, idProduct ], function(err, rows, fields) {
+        if (err) {
+            console.log(err);
+            res.sendStatus(400);
+        } else {
+            res.send(rows);
+            }
+        }
+    );
+});
+
 // Plant CRUD
 
 app.get('/plants', function(req, res)
     {  
-        let query1 = "SELECT * FROM Plants;";               // Define our query
+    // Declare Query 1
+    let query1 = "SELECT * FROM Plants;";
 
-        db.pool.query(query1, function(error, rows, fields){    // Execute the query
+    // Query 2 is the same in both cases
+    let query2 = "SELECT * FROM Products;";
 
-            res.render('plants', {data: rows});                  // Render the index.hbs file, and also send the renderer
-        })                                                      // an object where 'data' is equal to the 'rows' we
-    });
+    // Run the 1st query
+    db.pool.query(query1, function(error, rows, fields){
+        
+        // Save the people
+        let plants = rows;
+        
+        // Run the second query
+        db.pool.query(query2, (error, rows, fields) => {
+            
+            // Save the planets
+            let products = rows;
+            return res.render('plants', {data: plants, products: products});
+        })
+    })
+});
 app.post('/add-plant-ajax', function(req, res) 
 {
     // Capture the incoming data and parse it back to a JS object
@@ -227,7 +316,165 @@ app.post('/add-plant-ajax', function(req, res)
         }
     })
 });
+
+app.delete('/delete-plant-ajax/', function(req,res,next){
+    let data = req.body;
+    let idPlant = parseInt(data.id);
+    let deletePlant = `DELETE FROM Plants WHERE idPlant = ?;`;  
   
+          // Run the 1st query
+          db.pool.query(deletePlant, [idPlant], function(error, rows, fields){
+              if (error) {
+  
+              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+              console.log(error);
+              res.sendStatus(400);
+              }
+              else
+            {
+                res.redirect('/plants');
+            }
+  })});
+
+  app.put('/put-plant-ajax', function(req, res, next) {
+    let data = req.body;
+    let idPlant = parseInt(data.pName);
+    let isToxic = parseInt(data.isToxic);  
+    let query1 = `UPDATE Plants SET lighting = ?, water = ?, season = ?, isToxic = ? WHERE idPlant = ?;`;
+    db.pool.query(query1, [data['lighting'], data['water'], data['season'], isToxic, idPlant], function(err, rows, fields) {
+        if (err) {
+            console.log(err);
+            res.sendStatus(400);
+        } else {
+            res.send(rows);
+            }
+        }
+    );
+});
+
+// sales CRUD
+
+// app.get('/sales', function(req, res)
+//     {  
+//         let query1 = "SELECT * FROM Sales;";               // Define our query
+
+//         db.pool.query(query1, function(error, rows, fields){    // Execute the query
+
+//             res.render('sales', {data: rows});                  // Render the index.hbs file, and also send the renderer
+//         })                                                      // an object where 'data' is equal to the 'rows' we
+//     });
+
+
+app.get('/sales', function(req, res)
+{  
+// Declare Query 1
+let query1 = "SELECT * FROM Sales;";
+
+// Query 2 is the same in both cases
+let query2 = "SELECT * FROM Customers;";
+
+let query3 = "SELECT * FROM Employees;";
+
+// Run the 1st query
+db.pool.query(query1, function(error, rows, fields){
+    
+    // Save the people
+    let sales = rows;
+    
+    // Run the second query
+    db.pool.query(query2, (error, rows, fields) => {
+        
+        // Save the planets
+        let customers = rows;
+
+        // Run the third query
+        db.pool.query(query3, (error, rows, fields) => {
+        
+            // Save the planets
+            let employees = rows;
+            return res.render('sales', {data: sales, customers: customers, employees: employees});
+        })
+    })  
+})
+});
+
+app.post('/add-sale-ajax', function(req, res) 
+{
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body;
+
+    // Capture NULL values
+    let totalProducts = parseInt(data.totalProducts);
+    let idCustomer = parseInt(data.idCustomer);
+    let idEmployee = parseInt(data.idEmployee);
+
+    if (isNaN(totalProducts))
+    {
+        totalProducts = 'NULL'
+    }
+    if (isNaN(idCustomer))
+    {
+        idCustomer = 'NULL'
+    }
+    if (isNaN(idEmployee))
+    {
+        idEmployee = 'NULL'
+    }
+
+    // Create the query and run it on the database
+    query1 = `INSERT INTO Sales (purchaseDate, totalProducts, idCustomer, idEmployee) VALUES ('${data.purchaseDate}', '${totalProducts}', '${idCustomer}', ${idEmployee})`;
+    db.pool.query(query1, function(error, rows, fields){
+
+        // Check to see if there was an error
+        if (error) {
+
+            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+            console.log(error)
+            res.sendStatus(400);
+        }
+        else
+        {
+            res.redirect('/sales');
+        }
+    })
+});
+
+app.delete('/delete-sale-ajax/', function(req,res,next){
+    let data = req.body;
+    let idSale = parseInt(data.id);
+    let deleteSale = `DELETE FROM Sales WHERE idSale = ?;`;  
+  
+          // Run the 1st query
+          db.pool.query(deleteSale, [idSale], function(error, rows, fields){
+              if (error) {
+  
+              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+              console.log(error);
+              res.sendStatus(400);
+              }
+              else
+            {
+                res.redirect('/sales');
+            }
+  })});
+
+app.put('/put-sale-ajax', function(req, res, next) {
+    let data = req.body;
+    let idSale = parseInt(data.idSale);
+    let totalProducts = parseInt(data.totalProducts);  
+    let idEmployee = parseInt(data.idEmployee);  
+    let idCustomer = parseInt(data.idCustomer);  
+    let query1 = `UPDATE Sales SET purchaseDate = ?, totalProducts = ?, idEmployee = ?, idCustomer = ? WHERE idSale = ?;`;
+    db.pool.query(query1, [data['purchaseDate'], totalProducts, idEmployee, idCustomer, idSale], function(err, rows, fields) {
+        if (err) {
+            console.log(err);
+            res.sendStatus(400);
+        } else {
+            res.send(rows);
+            }
+        }
+    );
+});
 
 /*
     LISTENER
