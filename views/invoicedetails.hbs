@@ -1,0 +1,147 @@
+<!-- invoicedetails.hbs -->
+<script
+    src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"
+></script>
+<div class="welcome">Welcome to Potted Palace Nursery</div>
+
+<nav class="navigation">
+    <ul class='navigation'>
+        <li> <a href="/">Home </a> </li>
+        <li> <a href="/plants">Plants</a> </li>
+        <li> <a href="/products">Products</a> </li>
+        <li> <a href="/Sales">Sales</a> </li>
+        <li> <a href="/invoicedetails">Invoice Details</a> </li>
+        <li> <a href="/customers">Customers</a> </li>
+        <li> <a href="/employees">Employees</a> </li>
+    </ul>
+</nav>
+
+<table id="invoicedetails-table">
+    <thead>
+        <tr>
+            <th>Invoice Details ID</th>
+            <th>Order Quantity</th>
+            <th>Unit Price</th>
+            <th>Line Total</th>
+        </tr>
+    </thead>
+    {{#each invoicedetails}}
+    <tbody>
+        <tr>
+            <td> {{this.invoiceDetailsId}} </td>
+            <td> {{this.orderQty}} </td>
+            <td> {{this.unitPrice}} </td>
+            <td> {{this.lineTotal}} </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<div></div>
+{{! Create a Table }}
+<table id="invoicedetails_has_products-table">
+        <thead>
+        <tr>
+            <th> Sale ID </th>
+            <th> Employee Name </th>
+            <th> Customer Name </th>
+            <th> Invoice Details ID </th>
+            <th> Products Purchased </th>
+            <th> Number of Items Purchased </th>
+            <th> Order Total </th>
+        </tr>
+    </thead>
+    {{#each invoicedetails_has_products}}
+    <tbody>
+        <tr>
+            <td> {{this.idSale}}</td>
+            <td> {{this.employeeName}} </td>
+            <td> {{this.customerName}} </td>
+            <td> {{this.invoiceDetailsId}} </td>
+            <td> {{this.orderQty}} </td>
+            <td> {{this.productsPurchased}} </td>
+            <td> {{this.total}} </td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+
+<div></div>
+<!-- Add Invoice Detail -->
+<div class="form-style">
+    <h4>Add New Invoice Detail</h4>
+    <form id="add-invoicedetail-form-ajax">
+        <input type="number" name="input-orderQty" id="input-orderQty" placeholder="Order Quantity" required />
+        <input type="number" name="input-unitPrice" id="input-unitPrice" placeholder="Unit Price" required />
+        <input type="number" name="input-lineTotal" id="input-lineTotal" placeholder="Line Total" required />
+        <input type="submit">
+    </form>
+</div>
+<br />
+
+<div></div>
+<!-- Update Invoice Detail -->
+<div class="form-style">
+    <h4>Edit Invoice Detail</h4>
+    <form id="update-invoicedetail-form-ajax">
+        <select name="update-invoiceDetailsId" id="update-invoiceDetailsId">
+            <option value="test">Select a Invoice Detail Edit By ID</option>
+            {{#each data}}
+            <option value="{{this.invoiceDetailsId}}"> {{this.invoiceDetailsId}} </option>
+            {{/each}}
+        </select>
+        <input type="text" name="update-orderQty" id="update-orderQty" placeholder="Order Quantity" required/>
+        <input type="text" name="update-unitPrice" id="update-unitPrice" placeholder="Unit Price" required/>
+        <input type="text" name="update-total" id="update-total" placeholder="Order Total" required/>
+        <input type="submit">
+    </form>
+</div>
+<br />
+
+<div></div>
+<!-- Add Invoice Details has products -->
+<div class="form-style">
+    <h4>Add New Invoice Detail Has Product</h4>
+    <form id="add-invoicedetails_has_products-form-ajax">
+        <input type="text" name="input-customerFirstName" id="input-customerFirstName" placeholder="Customer First Name" required/>
+        <input type="text" name="input-customerLastName" id="input-customerLastName" placeholder="Customer Last Name" required/>
+        <input type="text" name="input-employeeFirstName" id="input-employeeFirstName" placeholder="Employee First Name"/>
+        <input type="text" name="input-employeeLastName" id="input-employeeLastName" placeholder="Employee Last Name"/>
+        <input type="text" name="input-productPurchased" id="input-productPurchased" placeholder="Product Purchased" required/>
+        <input type="text" name="input-orderQty" id="input-orderQty" placeholder="Order Quantity" required/>
+        <input type="text" name="input-total" id="input-total" placeholder="Order Total" required/>
+        <input type="submit">
+    </form>
+</div>
+<br />
+
+<div></div>
+
+<!-- Update Invoice Details has products Table -->
+<div class="form-style">
+    <h4>Edit Invoice Detail Has Product</h4>
+    <form id="update-invoicedetails_has_products-form-ajax">
+        <select name="update-fullName" id="update-fullName">
+            <option value="test">Select a Customer's Invoice Detail to Edit By Customer Name</option>
+            {{#each data}}
+            <option value="{{this.idCustomer}}"> {{this.firstName}} {{this.lastName}} </option>
+            {{/each}}
+        </select>
+        <input type="text" name="update-customerFirstName" id="update-customerFirstName" placeholder="Customer First Name" required/>
+        <input type="text" name="update-customerLastName" id="update-customerLastName" placeholder="Customer Last Name" required/>
+        <input type="text" name="update-employeeFirstName" id="update-employeeFirstName" placeholder="Employee First Name"/>
+        <input type="text" name="update-employeeLastName" id="update-employeeLastName" placeholder="Employee Last Name"/>
+        <input type="text" name="update-productPurchased" id="update-productPurchased" placeholder="Product Purchased" required/>
+        <input type="text" name="update-orderQty" id="update-orderQty" placeholder="Order Quantity" required/>
+        <input type="text" name="update-total" id="update-total" placeholder="Order Total" required/>
+        <input type="submit">
+    </form>
+</div>
+<br />
+
+
+{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
+<script src="./js/add_invoicedetails.js"></script>
+<script src="./js/update_invoicedetails.js"></script>
+<script src="./js/add_invoicedetails_has_products.js"></script>
+<script src="./js/update_invoicedetails_has_products.js"></script>
