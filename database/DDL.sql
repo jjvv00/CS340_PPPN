@@ -63,7 +63,7 @@ CREATE TABLE Products (
 
 CREATE TABLE Sales(
     idSale int NOT NULL AUTO_INCREMENT UNIQUE,
-    purchaseDate DATETIME NOT NULL,
+    purchaseDate date NOT NULL,
     totalProducts int NOT NULL,
     idCustomer int NOT NULL,
     idEmployee int NOT NULL,
