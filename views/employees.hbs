@@ -42,6 +42,20 @@
 </table>
 <script src="./js/delete_employee.js"></script>
 
+<br />
+<form>
+<h2> Search for an Employee</h2>
+<p>Search by employee last name using the field below. Partial last names are Ok too!</p>
+<form id="search-employee-html" method='GET' action='/employees'>
+    <label for="input-lastName">Search by Last Name: </label>
+    <br>
+    <input type="text" name="lastName" id="input-lastName-html-search">
+    <br>
+    <input type="submit">
+    <a href='/employees'><button>Reset</button></a>
+</form>
+<br />
+
 {{!-- Form to add a record to the table  --}}
 <h2>Add New Employee</h2>
 <p>To add a new person, please enter their information below and click 'Submit'!</p>
@@ -71,16 +85,7 @@
 <br />
 <script src="./js/add_employee.js"></script>
 
-<h2> Search for an Employee</h2>
-<p>Search by employee last name using the field below. Partial last names are Ok too!</p>
-<form id="search-employee-html" method='GET' action='/employees'>
-    <label for="input-lastName">Search by Last Name: </label>
-    <br>
-    <input type="text" name="lastName" id="input-lastName-html-search">
-    <br>
-    <input type="submit">
-    <a href='/employees'><button>Reset</button></a>
-
+<br />
 <h2>Update An Employee</h2>
 <div class="form-style">
 <form id="update-employee-form-ajax">
