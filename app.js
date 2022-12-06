@@ -118,13 +118,19 @@ app.put('/put-customer-ajax', function(req, res, next) {
     EMPLOYEE CRUD
 */
 // get data and render in table
-app.get('/employees', function(req, res) {  
-        let query1 = "SELECT * FROM Employees;";               
-
-        db.pool.query(query1, function(error, rows, fields){    
-            res.render('employees', {data: rows});                  
-        })                                                     
-    });
+// implements search functionality 
+app.get('/employees', function(req, res){
+    let employees;
+    if (req.query.lastName === undefined) {
+        employees = "SELECT * FROM Employees;";
+    } else {
+        employees = `SELECT * FROM Employees WHERE lastName LIKE "${req.query.lastName}%"`
+    }
+    db.pool.query(employees, function(err, rows, fields){
+        let Employees = rows;
+        return res.render('employees', {data:Employees});
+    })
+});
 
 // add new employee to table
 app.post('/add-employee-ajax', function(req, res) {
