@@ -2,8 +2,8 @@ SET FOREIGN_KEY_CHECKS=0;
 SET AUTOCOMMIT = 0;
 
 DROP TABLE IF EXISTS `Sales`;
-DROP TABLE IF EXISTS `Plants`;
 DROP TABLE IF EXISTS `Products`;
+DROP TABLE IF EXISTS `Plants`;
 DROP TABLE IF EXISTS `Customers`;
 DROP TABLE IF EXISTS `Employees`;
 DROP TABLE IF EXISTS `InvoiceDetails`;
@@ -29,23 +29,24 @@ CREATE TABLE Customers (
     PRIMARY KEY(idCustomer)
 );
 
-  CREATE TABLE Products (
-      idProduct int NOT NULL AUTO_INCREMENT UNIQUE,
-      name varChar(145) NOT NULL,
-      price decimal(5,2) NOT NULL,
-      PRIMARY KEY(idProduct)
-  );
-
 CREATE TABLE Plants (
     idPlant int NOT NULL AUTO_INCREMENT UNIQUE,
     plantName varChar(145) NOT NULL,
     lighting varChar(145) NOT NULL,
     water varChar(145) NOT NULL,
     season varChar(145) NOT NULL,
-    isToxic TINYINT(1) NOT NULL,
-    idProduct int NOT NULL,
-    PRIMARY KEY(idPlant),
-    FOREIGN KEY (idProduct) REFERENCES Products(idProduct) ON DELETE CASCADE
+    isToxic tinyint(1) NOT NULL,
+    PRIMARY KEY(idPlant)
+  );
+
+CREATE TABLE Products (
+      idProduct int NOT NULL AUTO_INCREMENT UNIQUE,
+      name varChar(145) NOT NULL,
+      price decimal(5,2) NOT NULL,
+      idPlant int,
+      PRIMARY KEY(idProduct),
+      FOREIGN KEY (idPlant) REFERENCES Plants(idPlant) ON DELETE CASCADE
+
   );
 
   CREATE TABLE InvoiceDetails (
@@ -84,18 +85,18 @@ VALUES ('Natalie','Hill','nathill123@hello.com',1238379234,'8973 Reser St. Corva
 ('John','Rosario','johnnnros@hello.com',1232348963,'2345 Linc St. Corvallis, OR 97330'),
 ('Mel','McGregor','melmcg44@hello.com',1232347789,'9327 Dearborn Rd. Corvallis, OR 97330'),
 ('Cesar','Nguyen','nguyendelces@hello.com',1238883689,'2345 Austin Ln. Corvallis, OR 97730');
-    
-INSERT INTO Products (name,price)
-VALUES("Sally's All Purpose Plant Food",12.99),
-("AC Kahuna Dahlia",9.95),
-("Bird of Paradise",50.99),
-("Monstera",15.99),
-("6 inch Ceramic Planter",15.99);
 
-INSERT INTO Plants (plantName,lighting, water, season, isToxic,idProduct)
-VALUES("AC Kahuna Dahlia","Full Sun","Once per week","Late Spring",1, (SELECT idProduct FROM Products WHERE idProduct = 2)),
-("Bird of Paradise","Full Sun","1-2 weeks","Perennial",0, (SELECT idProduct FROM Products WHERE idProduct = 3)),
-("AC Kahuna Dahlia","Full - Partial Sun","1-2 week","Perennial",1,(SELECT idProduct FROM Products WHERE idProduct = 4));
+INSERT INTO Plants (plantName,lighting, water, season, isToxic)
+VALUES("AC Kahuna Dahlia","Full Sun","Once per week","Late Spring",1),
+("Bird of Paradise","Full Sun","1-2 weeks","Perennial",0),
+("Monstera","Full - Partial Sun","1-2 week","Perennial",1);
+
+INSERT INTO Products (name,price,idPlant)
+VALUES("Sally's All Purpose Plant Food",12.99, NULL),
+("AC Kahuna Dahlia",9.95,1),
+("Bird of Paradise",50.99,2),
+("Monstera",15.99,3),
+("6 inch Ceramic Planter",15.99, NULL);
 
 INSERT INTO InvoiceDetails (idSale,idProduct,orderQty,unitPrice,lineTotal)
 Values (1,2,3,9.95,29.85),
