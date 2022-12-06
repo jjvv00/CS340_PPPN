@@ -1,15 +1,7 @@
-<!-- sale.hbs -->
-<nav class="navigation">
-    <ul class='navigation'>
-        <li> <a href="/">Home </a> </li>
-        <li> <a href="/plants">Plants</a> </li>
-        <li> <a href="/products">Products</a> </li>
-        <li> <a href="/Sales">Sales</a> </li>
-        <li> <a href="/invoicedetails">Invoice Details</a> </li>
-        <li> <a href="/customers">Customers</a> </li>
-        <li> <a href="/employees">Employees</a> </li>
-    </ul>
-</nav>
+<!-- sales.hbs -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<div></div>
 
 {{!-- Create a table --}}
 <table id="sales-table">
@@ -47,8 +39,8 @@
 <script src="./js/delete_sale.js"></script>
 
 {{!-- Form to add a record to the table  --}}
-<h2>Adding Data with AJAX</h2>
-<p>To add a new person, please enter their information below and click 'Submit'!</p>
+<h2>Add New Sale</h2>
+<p>To add a new sale, please enter the information below and click 'Submit'!</p>
 <div class="form-style">
 <form id="add-sale-form-ajax">
     <label for="input-purchaseDate">Purchase Date: </label>
@@ -79,7 +71,7 @@
 <br />
 <script src="./js/add_sale.js"></script>
 
-<h2>Updating An Sale Form</h2>
+<h2>Update An Sale</h2>
 <div class="form-style">
 <form id="update-sale-form-ajax">
 
