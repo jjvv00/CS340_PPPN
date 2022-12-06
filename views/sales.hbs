@@ -27,7 +27,7 @@
         {{#each data}}
         <tr data-value={{this.idSale}}>            
             <td>{{this.idSale}}</td>
-            <td>{{this.purchaseDate}}</td>
+            <td>{{moment this.purchaseDate format="YYYY-MM-DD"}}</td>
             <td>{{this.totalProducts}}</td>
             <td>{{this.idEmployee}}</td>
             <td>{{this.idCustomer}}</td>
