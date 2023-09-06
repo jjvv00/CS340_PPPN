@@ -1,5 +1,6 @@
 # CS340_PPPN
 Potted Palace Plant Nursery DB
+
 Co-Author: Melissa Babcock
 
 This is a project completed for Intro to Databases at Oregon State University
